@@ -95,5 +95,7 @@ def generate_camera_frames():
 @app.route('/live')
 def live():
     return Response(generate_camera_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    debug_mode = os.environ.get("DEBUG", "False").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
