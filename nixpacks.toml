@@ -5,4 +5,4 @@ nixPkgs = ["mesa" "libGL" "glib"]
 cmds = ["pip install -r requirements.txt"]
 
 [start]
-cmd = "gunicorn app:app --bind 0.0.0.0:5000"
+cmd = "gunicorn app:app --bind 0.0.0.0:8080"
