@@ -3,4 +3,5 @@ Pillow
 numpy
 opencv-python
 tensorflow==2.15.0
-cv2
+flask
+gunicorn
