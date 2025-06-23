@@ -1,0 +1,5 @@
+micros:
+  - name: face-mask-detector
+    src: .
+    engine: python3.10
+    primary: true
