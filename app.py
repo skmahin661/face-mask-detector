@@ -4,28 +4,28 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 from werkzeug.utils import secure_filename
+import gdown
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-import os
-import gdown
 
-# Download model if not already downloaded
+# === Model Download ===
 model_path = "maask_detector.h5"
-gdrive_file_id = "19rqkvxGHGIDMzyZ3AB0MyCVxyCdwBLCQ"  # Replace with actual ID
-url = f"https://drive.google.com/file/d/19rqkvxGHGIDMzyZ3AB0MyCVxyCdwBLCQ/view?usp=sharing"
+gdrive_file_id = "19rqkvxGHGIDMzyZ3AB0MyCVxyCdwBLCQ"
+url = f"https://drive.google.com/uc?id={gdrive_file_id}"
 
 if not os.path.exists(model_path):
     print("Downloading model from Google Drive...")
     gdown.download(url, model_path, quiet=False)
 
-# Load model and Haar cascade
-model = load_model('maask_detector.h5')
+# === Load Model and Haar Cascade ===
+model = load_model(model_path)
 labels = ['No Mask', 'Mask', 'Incorrect']
 colors = [(0, 0, 255), (0, 255, 0), (0, 165, 255)]
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 
+# === Image Upload Prediction ===
 def detect_faces_in_image(image_path):
     img = cv2.imread(image_path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -69,7 +69,7 @@ def index():
     return render_template('index.html')
 
 
-# ===== LIVE CAMERA FEED FUNCTION =====
+# === Live Camera Feed Prediction ===
 def generate_camera_frames():
     cap = cv2.VideoCapture(0)
 
@@ -106,6 +106,9 @@ def generate_camera_frames():
 @app.route('/live')
 def live():
     return Response(generate_camera_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+# === Run App ===
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     debug_mode = os.environ.get("DEBUG", "False").lower() == "true"
