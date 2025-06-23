@@ -7,6 +7,17 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
+import os
+import gdown
+
+# Download model if not already downloaded
+model_path = "maask_detector.h5"
+gdrive_file_id = "19rqkvxGHGIDMzyZ3AB0MyCVxyCdwBLCQ"  # Replace with actual ID
+url = f"https://drive.google.com/file/d/19rqkvxGHGIDMzyZ3AB0MyCVxyCdwBLCQ/view?usp=sharing"
+
+if not os.path.exists(model_path):
+    print("Downloading model from Google Drive...")
+    gdown.download(url, model_path, quiet=False)
 
 # Load model and Haar cascade
 model = load_model('maask_detector.h5')
